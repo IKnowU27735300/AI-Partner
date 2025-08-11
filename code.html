@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI_girl</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0a0b1b;
+      font-family: 'Inter', sans-serif;
+      color: #e0e0e0;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+    }
+    /* Sidebar */
+    .sidebar {
+      background: #12122b;
+      width: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 2rem 1.5rem;
+      min-height: 100vh;
+      box-sizing: border-box;
+      border-right: 1px solid #2f2f4a;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: linear-gradient(90deg, #7e38f2, #e643ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2rem;
+      user-select: none;
+    }
+    .nav-links, .footer-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .nav-link, .footer-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: #a6a6b5;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s, color 0.3s;
+      text-decoration: none;
+    }
+    .nav-link.active, .nav-link:hover, .footer-link:hover {
+      background-color: #261d5f;
+      color: #d1ccff;
+    }
+    .nav-link svg, .footer-link svg {
+      stroke: #a6a6b5;
+      stroke-width: 1.5;
+      transition: stroke 0.3s;
+      min-width: 20px;
+      min-height: 20px;
+    }
+    .nav-link.active svg, .nav-link:hover svg, .footer-link:hover svg {
+      stroke: #d1ccff;
+    }
+
+    /* Main content */
+    .main-content {
+      flex-grow: 1;
+      padding: 2rem 2rem 3rem 2rem;
+      overflow-y: auto;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    /* Top nav */
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: #1e1e4a;
+      padding: 0.45rem 0.75rem;
+      border-radius: 0.5rem;
+      color: #aaaaff;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      min-width: 180px;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid transparent;
+      transition: background-color 0.3s, border-color 0.3s;
+    }
+    .search-bar:hover {
+      background-color: #292966;
+      border-color: #7e38f2;
+    }
+    .tags {
+      display: flex;
+      background: #1e1e4a;
+      border-radius: 0.5rem;
+      gap: 1rem;
+      padding: 0.35rem 0.8rem;
+      user-select: none;
+    }
+    .tag {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      cursor: pointer;
+      color: #bbbbff;
+      font-size: 0.85rem;
+      border-radius: 0.4rem;
+      padding: 0.2rem 0.5rem;
+      user-select: none;
+      white-space: nowrap;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .tag:hover {
+      background-color: #7e38f2;
+      color: #fff;
+    }
+    .tag svg {
+      stroke-width: 2;
+      stroke: #bbbaff;
+    }
+    /* Login/Register Buttons */
+    .auth-buttons {
+      display: flex;
+      gap: 1rem;
+      user-select: none;
+    }
+    .login-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 0.5rem;
+      background-color: transparent;
+      border: 1.5px solid #55557e;
+      color: #bbbaff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    }
+    .login-btn:hover {
+      background-color: #55557e;
+      border-color: #9999ff;
+      color: #eee;
+    }
+    .register-btn {
+      padding: 0.5rem 1.2rem;
+      border-radius: 0.5rem;
+      background: linear-gradient(90deg, #7e38f2, #e643ff);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: filter 0.3s;
+    }
+    .register-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Banner area */
+    .banner {
+      background: linear-gradient(135deg, #4b1ca6 0%, #3c0f71 48%, #1e1e4a 100%);
+      border-radius: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 2.5rem 2.5rem 2.5rem 3rem;
+      margin-bottom: 2rem;
+      user-select: none;
+      box-shadow: 0 10px 40px rgb(123 63 201 / 0.8);
+      flex-wrap: wrap;
+    }
+    .banner-texts {
+      max-width: 540px;
+      color: #dcdcff;
+    }
+    .banner-texts h1 {
+      font-weight: 700;
+      font-size: 1.8rem;
+      margin-bottom: 0.6rem;
+      line-height: 1.2;
+      user-select: text;
+    }
+    .banner-texts h1 .highlight {
+      background: linear-gradient(90deg, #7e38f2, #e643ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+    .banner-texts p {
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      max-width: 480px;
+      user-select: text;
+      color: #ccccffcc;
+      line-height: 1.4;
+    }
+    .create-btn {
+      background: linear-gradient(90deg, #7e38f2, #e643ff);
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      padding: 0.65rem 1.7rem;
+      border-radius: 0.6rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      user-select: none;
+      box-shadow: 0 5px 18px rgb(132 55 250 / 0.6);
+      transition: filter 0.3s;
+    }
+    .create-btn:hover {
+      filter: brightness(1.15);
+    }
+    .create-btn svg {
+      stroke-width: 2.2;
+    }
+    /* Banner Image */
+    .banner-image {
+      max-width: 320px;
+      flex-shrink: 0;
+      position: relative;
+      cursor: default;
+    }
+    .banner-image img {
+      width: 100%;
+      height: auto;
+      border-radius: 1rem;
+      box-shadow: 0 6px 18px rgb(222 145 250 / 0.3);
+      object-fit: cover;
+      aspect-ratio: 3 / 4;
+      user-select: none;
+    }
+    .badge {
+      position: absolute;
+      padding: 0.28rem 0.8rem;
+      font-size: 0.7rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      color: white;
+      cursor: default;
+      user-select: none;
+      box-shadow: 0 0 6px rgb(255 255 255 / 0.3);
+      user-select:none;
+      background: #666;
+      white-space: nowrap;
+      transition: background-color 0.3s;
+    }
+    /* Each badge distinct color */
+    .badge.brunette { background: #fa6c4a; top: 12%; left: 10%; }
+    .badge.longhair { background: #f45691; top: 0; right: 20%; }
+    .badge.realistic { background: #7cb3ff; top: 30%; left: 15%; }
+    .badge.caucasian { background: #6e77ff; top: 20%; right: 10%; }
+    .badge.twenties { background: #c361ff; bottom: 10%; right: 17%; }
+
+    /* Grid gallery for cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+      gap: 1.3rem 1.3rem;
+    }
+    /* Card */
+    .card {
+      background: #1c1c44;
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgb(138 80 255 / 0.2);
+      user-select: none;
+      transition: box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .card:hover {
+      box-shadow: 0 10px 40px rgb(143 73 255 / 0.55);
+    }
+    .card img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      display: block;
+      user-select: none;
+      border-bottom: 2px solid #3f3f74;
+      border-radius: 1rem 1rem 0 0;
+    }
+    .card-info {
+      flex-grow: 1;
+      background: #22225d;
+      color: white;
+      padding: 0.8rem 1rem 0.6rem 1rem;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      border-radius: 0 0 1rem 1rem;
+      user-select: text;
+    }
+    .card-info span {
+      background: #161641;
+      padding: 0.25rem 0.7rem;
+      border-radius: 0.5rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      opacity: 0.85;
+      user-select:none;
+    }
+    .card-footer {
+      background: #0e0e29;
+      font-size: 0.82rem;
+      color: #a6a6d8dd;
+      padding: 0.5rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 0 0 1rem 1rem;
+      font-weight: 500;
+      user-select:none;
+    }
+    .card-footer svg {
+      stroke-width: 1.7;
+    }
+
+    /* Scrollbar for main content */
+    .main-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    .main-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .main-content::-webkit-scrollbar-thumb {
+      background: #6a47e7;
+      border-radius: 3px;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 900px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #2f2f4a;
+        flex-direction: row;
+        padding: 1rem 1rem;
+        gap: 1rem;
+        overflow-x: auto;
+      }
+      .nav-links, .footer-links {
+        flex-direction: row;
+      }
+      .nav-link, .footer-link {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.85rem;
+      }
+      .main-content {
+        padding: 1.2rem 1.5rem 2rem 1.5rem;
+        max-width: none;
+        margin: 0;
+      }
+      .banner {
+        flex-direction: column;
+        padding: 1.5rem 1.5rem 2rem 1.5rem;
+        text-align: center;
+      }
+      .banner-texts {
+        max-width: 100%;
+      }
+      .banner-image {
+        max-width: 280px;
+        margin: 1rem auto 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="Main sidebar">
+    <div>
+      <div class="logo" aria-label="AI_girl logo">AI_girl</div>
+      <nav class="nav-links" aria-label="Primary navigation">
+        <a href="#" class="nav-link active" aria-current="page">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h7"></path></svg>
+          Explore
+        </a>
+        <a href="#" class="nav-link">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Generator
+        </a>
+        <a href="#" class="nav-link">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 6-9 10-9 10s-9-4-9-10a9 9 0 1118 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          Chat
+        </a>
+        <a href="#" class="nav-link">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"></path></svg>
+          Saved
+        </a>
+      </nav>
+    </div>
+    <nav class="footer-links" aria-label="Secondary navigation">
+      <a href="#" class="footer-link">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M10 12c0-1.105.895-2 2-2s2 .895 2 2"></path><path d="M12 14v2"></path></svg>
+        Affiliate
+      </a>
+      <a href="#" class="footer-link">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 16h-1v-4h-1"></path><circle cx="12" cy="12" r="10"></circle></svg>
+        Updates
+      </a>
+      <a href="#" class="footer-link">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"></path><path d="M12 3v18"></path></svg>
+        Settings
+      </a>
+    </nav>
+  </aside>
+  <main class="main-content" role="main">
+    <header class="top-nav">
+      <div class="search-bar" tabindex="0" aria-label="Search Girlfriend">
+        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Girlfriend
+      </div>
+      <nav class="tags" aria-label="Filter tags">
+        <div class="tag" tabindex="0">Anime <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+        <div class="tag" tabindex="0">Boyfriend <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" class="icon" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="16"></line><line x1="8" y1="12" x2="16" y2="12"></line></svg></div>
+      </nav>
+      <div class="auth-buttons">
+        <button class="login-btn" type="button" aria-label="Login to AI_girl">Login</button>
+        <button class="register-btn" type="button" aria-label="Register at AI_girl">Register</button>
+      </div>
+    </header>
+    <section class="banner" aria-label="Create your own AI Girlfriend banner">
+      <div class="banner-texts">
+        <h1>Create your own <span class="highlight">AI Girlfriend</span></h1>
+        <p>Your virtual AI girlfriend is waiting to meet you. Looks, personality, quirks... she's yours to create. One click, and your AI gf is here to make your fantasies come true.</p>
+        <button class="create-btn" type="button" aria-label="Create AI Girlfriend">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg>
+          Create AI Girlfriend
+        </button>
+      </div>
+      <div class="banner-image" aria-hidden="true">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/26bff8f8-a2e3-4b1c-96d1-b28375160fe9.png" alt="Attractive modern AI-generated young woman with long brunette hair, glowing aura purple gradient background, and floating soft rectangular badges with descriptive words around her" onerror="this.style.display='none'" />
+        <span class="badge brunette">Brunette</span>
+        <span class="badge longhair">Long Hair</span>
+        <span class="badge realistic">Realistic</span>
+        <span class="badge caucasian">Caucasian</span>
+        <span class="badge twenties">Twenties</span>
+      </div>
+    </section>
+    <section class="card-grid" aria-label="Gallery of AI Girl Profiles">
+      <article class="card" tabindex="0" aria-label="Catalina, 19 years old, Care to join me for a shower?">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/3c9b5475-8cc4-4d67-ab66-ceda606bcc46.png" alt="Portrait of young woman in white robe smiling invitingly, indoors natural light" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Catalina <small>19</small></span>
+        </div>
+        <div class="card-footer">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 14l-1-1-4 4"></path><path d="M17 14v-6a5 5 0 00-10 0v5"></path></svg>
+          Care to join me for a shower?
+        </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Rina, 23 years old, I could use some company...">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/17f35c28-196f-4f21-99ec-cee98430e1b5.png" alt="Beautiful young Asian woman sitting on hardwood floor wearing dark blue dress inside warmly lit modern room" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Rina <small>23</small></span>
+        </div>
+        <div class="card-footer">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 14l-1-1-4 4"></path><path d="M17 14v-6a5 5 0 00-10 0v5"></path></svg>
+          I could use some company...
+        </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Grace, 23 years old, Yeeehawww!">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/376ecb20-a243-4db6-b1cd-362800929604.png" alt="Young woman with long red hair in a casual denim jacket standing sideways with sky and field background" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Grace <small>23</small></span>
+        </div>
+        <div class="card-footer">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 14l-1-1-4 4"></path><path d="M17 14v-6a5 5 0 00-10 0v5"></path></svg>
+          Yeeehawww!
+        </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Natasha, 18 years old, Think you can handle me? Prove it">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/30bd0e5b-7ab7-49bc-9e98-228cf1ca39ad.png" alt="Confident young woman with long brown hair, wearing white cropped top and brown shorts, leaning on graffiti wall" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Natasha <small>18</small></span>
+        </div>
+        <div class="card-footer">
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 14l-1-1-4 4"></path><path d="M17 14v-6a5 5 0 00-10 0v5"></path></svg>
+          Think you can handle me? Prove it
+        </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Mariana, 29 years old">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/37d112d5-996d-411b-a9f0-4f80cdef728b.png" alt="Young woman with long dark hair in a black t-shirt and blue jeans standing in an auditorium, looking at camera" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Mariana <small>29</small></span>
+        </div>
+        <div class="card-footer"> </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Bianca, 28 years old">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/87dbc5a2-18a0-450b-b1e2-081b1bdc128c.png" alt="Portrait of young woman in leopard print bikini with brunette hair by a tropical beach with waves in background" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Bianca <small>28</small></span>
+        </div>
+        <div class="card-footer"> </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Sofia, 25 years old">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/95e41bd2-5bee-43f9-9ef6-0a09ad346bb3.png" alt="Smiling young woman in white and blue tennis outfit standing in a tennis stadium" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Sofia <small>25</small></span>
+        </div>
+        <div class="card-footer"> </div>
+      </article>
+      <article class="card" tabindex="0" aria-label="Ariana, 19 years old">
+        <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/f8f6dbbe-cb2a-47bb-b9c6-7f7517dcbd11.png" alt="Soft-focused young blonde woman in pink pajama set standing in well-lit modern bedroom" onerror="this.style.display='none'" />
+        <div class="card-info">
+          <span>Ariana <small>19</small></span>
+        </div>
+        <div class="card-footer"> </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
+
